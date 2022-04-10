@@ -5,6 +5,8 @@ let api = new (require('./APi'))
 let bodyParser = require('body-parser')
 app.use(bodyParser.json())
 let { mkdirSync, existsSync } = require('fs')
+let axios = require('axios')
+
 if (!existsSync('./db')) {
     mkdirSync('./db')
 }
@@ -22,56 +24,56 @@ app.post('/send-sms', (req, res) => {
     })
 })
 app.post('/sign-up', (req, res) => {
-    api.signUp(req.body).then((data)=>{
+    api.signUp(req.body).then((data) => {
         res.json(data)
-    }).catch((e)=>{
+    }).catch((e) => {
         console.log(e);
     })
 })
 app.post('/login', (req, res) => {
-    api.login(req.body).then((data)=>{
+    api.login(req.body).then((data) => {
         res.json(data)
-    }).catch((e)=>{
+    }).catch((e) => {
         console.log(e);
     })
 })
-app.post('/update-token',(req,res)=>{
-    api.updateToken(req.body).then((d)=>{
+app.post('/update-token', (req, res) => {
+    api.updateToken(req.body).then((d) => {
         res.json(d)
     })
 })
 app.post('/delete-account', (req, res) => {
     console.log('delete account');
-    api.deleteAccount(req.body).then((data)=>{
+    api.deleteAccount(req.body).then((data) => {
         res.json(data)
-    }).catch((e)=>{
+    }).catch((e) => {
         console.log(e);
     })
 })
-app.post('/revoke-api',(req,res)=>{
+app.post('/revoke-api', (req, res) => {
     console.log('revoke api');
-    api.revokeApi(req.body).then((data)=>{
+    api.revokeApi(req.body).then((data) => {
         console.log(data);
         res.json(data)
-    }).catch((e)=>{
+    }).catch((e) => {
         console.log(e);
     })
 })
-app.post('/disable-api',(req,res)=>{
+app.post('/disable-api', (req, res) => {
     console.log('disable api');
-    api.disableApi(req.body).then((data)=>{
+    api.disableApi(req.body).then((data) => {
         console.log(data);
         res.json(data)
-    }).catch((e)=>{
+    }).catch((e) => {
         console.log(e);
     })
 })
-app.post('/enable-auth',(req,res)=>{
+app.post('/enable-auth', (req, res) => {
     console.log('disable api');
-    api.enableAuthenetication(req.body).then((data)=>{
+    api.enableAuthenetication(req.body).then((data) => {
         console.log(data);
         res.json(data)
-    }).catch((e)=>{
+    }).catch((e) => {
         console.log(e);
     })
 })
@@ -79,3 +81,11 @@ app.post('/enable-auth',(req,res)=>{
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
+
+try {
+    setInterval(() => {
+        axios.default.get('http://localhost:3000').then((e) => { })
+    }, 1000 * 60 * 4)
+} catch (error) {
+
+}
