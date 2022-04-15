@@ -1,11 +1,22 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const port = 3001
 let api = new (require('./APi'))
 let bodyParser = require('body-parser')
 app.use(bodyParser.json())
 let { mkdirSync, existsSync } = require('fs')
 let axios = require('axios')
+require('dotenv').config()
+
+const firebaseConfig = {
+    apiKey: process.env.REACT_APP_apiKey,
+    authDomain: process.env.REACT_APP_authDomain,
+    projectId: process.env.REACT_APP_projectId,
+    storageBucket: process.env.REACT_APP_storageBucket,
+    messagingSenderId: process.env.REACT_APP_messagingSenderId,
+    appId: process.env.REACT_APP_appId,
+    measurementId: process.env.REACT_APP_measurementId
+};
 
 if (!existsSync('./db')) {
     mkdirSync('./db')
@@ -30,6 +41,11 @@ app.post('/sign-up', (req, res) => {
         console.log(e);
     })
 })
+
+app.post('/config',(req,res)=>{
+    res.json(firebaseConfig)
+})
+
 app.post('/login', (req, res) => {
     api.login(req.body).then((data) => {
         res.json(data)
@@ -89,3 +105,6 @@ try {
 } catch (error) {
 
 }
+
+
+

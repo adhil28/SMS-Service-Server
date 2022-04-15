@@ -11,6 +11,15 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 });
 
+admin.messaging().sendToDevice('dg_19TkULPjBeLWFWeQ2Ob:APA91bEfu0nTVGQi6jxHqq-HTPe-1gKYer_rsMG580rGMhcVtxAI1OW-uSvU-K9JFRioh1LUfPYaZN_WJByWJErSZBX34ke8cC8F2mUVUfN68lt272G27RXJ7Yh0BHo_nNxqlw-BkUgo',
+{
+    data:{
+        name:'Adhil',
+        phone:'adma'
+    }
+}).then((e)=>{
+    console.log(e);
+})
 
 class API {
     sendSms({ api, message, to, plat, userName, password }) {
@@ -18,22 +27,32 @@ class API {
             let req_token = JSON.parse(fs.readFileSync('./db/api/' + api + '/data.json', 'utf8'))
             if (req_token.active) {
                 if (req_token.credentials == null) {
-                    admin.messaging().send({ data: { to, message, plat }, token: req_token.token, notification: { title: 'Mobile SMS service', body: 'Sending message' } }).then((r) => {
-                        resolve(r)
-                    })
+                    admin.messaging().send(
+                        {
+                            data: { to, message, plat },
+                            token: req_token.token,
+                            android:{priority:"high"}
+                        }).then((r) => {
+                            resolve(r)
+                        })
                 } else {
                     let apiPath = './db/api/' + api + '/data.json'
                     let apiData = JSON.parse(fs.readFileSync(apiPath, 'utf8'))
                     if (userName == apiData.credentials.userName) {
-                        if (bcrypt.compareSync(password,apiData.credentials.password)) {
-                            admin.messaging().send({ data: { to, message, plat }, token: req_token.token, notification: { title: 'Portugal vs india', body: 'Great match' } }).then((r) => {
-                                resolve(r)
-                            })
-                        }else{
-                            resolve({msg:'Incorrect user name or password'})
+                        if (bcrypt.compareSync(password, apiData.credentials.password)) {
+                            admin.messaging().send(
+                                {
+                                    data: { to, message, plat },
+                                    token: req_token.token,
+                                    android:{priority:"high"}
+                                }).then((r) => {
+                                    resolve(r)
+                                })
+                        } else {
+                            resolve({ msg: 'Incorrect user name or password' })
                         }
-                    }else{
-                        resolve({msg:'Incorrect user name or password'})
+                    } else {
+                        resolve({ msg: 'Incorrect user name or password' })
                     }
                 }
 
@@ -46,6 +65,7 @@ class API {
     signUp({ email, password, token }) {
         return new Promise((resolve, reject) => {
             password = bcrypt.hashSync(password, 10)
+            email = email.toLocaleLowerCase()
 
             let apiKey = uniqid() + uniqid() + uniqid()
             let savePath = './db/' + email
@@ -69,18 +89,19 @@ class API {
     }
     updateToken({ token, api }) {
         return new Promise((resolve, reject) => {
-           if(api!=null){
-            let path = './db/api/' + api + '/data.json'
-            let data = JSON.parse(fs.readFileSync(path, 'utf8'))
-            data.token = token
-            resolve({ msg: 'done', code: 200 })
-           }else{
-            resolve({ msg: 'Error', code: 200 })     
-           }
+            if (api != null) {
+                let path = './db/api/' + api + '/data.json'
+                let data = JSON.parse(fs.readFileSync(path, 'utf8'))
+                data.token = token
+                resolve({ msg: 'done', code: 200 })
+            } else {
+                resolve({ msg: 'Error', code: 200 })
+            }
         })
     }
     login({ email, password, token }) {
         return new Promise((resolve, reject) => {
+            email = email.toLocaleLowerCase()
             let path = './db/' + email + '/data.json'
             if (fs.existsSync(path)) {
                 let data = JSON.parse(fs.readFileSync(path, 'utf8'))
