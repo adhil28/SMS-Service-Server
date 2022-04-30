@@ -4,7 +4,10 @@ const port = 3000
 let api = new (require('./APi'))
 let bodyParser = require('body-parser')
 let cors = require('cors')
-app.post('/get-data',cors())
+const coresOptions = {
+    origin:'https://mobile-sms-service.web.app'
+}
+app.use(cors(coresOptions))
 
 app.use(bodyParser.json())
 let { mkdirSync, existsSync } = require('fs')
