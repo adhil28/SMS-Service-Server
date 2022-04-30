@@ -11,17 +11,12 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 });
 
-admin.messaging().sendToDevice('dg_19TkULPjBeLWFWeQ2Ob:APA91bEfu0nTVGQi6jxHqq-HTPe-1gKYer_rsMG580rGMhcVtxAI1OW-uSvU-K9JFRioh1LUfPYaZN_WJByWJErSZBX34ke8cC8F2mUVUfN68lt272G27RXJ7Yh0BHo_nNxqlw-BkUgo',
-{
-    data:{
-        name:'Adhil',
-        phone:'adma'
-    }
-}).then((e)=>{
-    console.log(e);
-})
+
 
 class API {
+    admin() {
+        return admin
+    }
     sendSms({ api, message, to, plat, userName, password }) {
         return new Promise((resolve, reject) => {
             let req_token = JSON.parse(fs.readFileSync('./db/api/' + api + '/data.json', 'utf8'))
@@ -31,7 +26,7 @@ class API {
                         {
                             data: { to, message, plat },
                             token: req_token.token,
-                            android:{priority:"high"}
+                            android: { priority: "high" }
                         }).then((r) => {
                             resolve(r)
                         })
@@ -44,7 +39,7 @@ class API {
                                 {
                                     data: { to, message, plat },
                                     token: req_token.token,
-                                    android:{priority:"high"}
+                                    android: { priority: "high" }
                                 }).then((r) => {
                                     resolve(r)
                                 })
@@ -177,6 +172,11 @@ class API {
             fs.writeFileSync(apiPath, JSON.stringify(apiData))
             resolve({ msg: 'Done', code: 200 })
         })
+    }
+    getToken({ api }) {
+        let apiPath = './db/api/' + api + '/data.json'
+        let apiData = JSON.parse(fs.readFileSync(apiPath, 'utf8'))
+        return apiData
     }
 }
 module.exports = API

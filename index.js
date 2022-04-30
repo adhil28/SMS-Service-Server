@@ -1,8 +1,10 @@
 const express = require('express')
 const app = express()
-const port = 3001
+const port = 3000
 let api = new (require('./APi'))
 let bodyParser = require('body-parser')
+let cors = require('cors')
+app.use(cors({allowedHeaders:true,origin:'https://mobile-sms-service.web.app'}))
 app.use(bodyParser.json())
 let { mkdirSync, existsSync } = require('fs')
 let axios = require('axios')
@@ -43,6 +45,7 @@ app.post('/sign-up', (req, res) => {
 })
 
 app.post('/config',(req,res)=>{
+    console.log(req.baseUrl);
     res.json(firebaseConfig)
 })
 
@@ -92,6 +95,12 @@ app.post('/enable-auth', (req, res) => {
     }).catch((e) => {
         console.log(e);
     })
+})
+
+app.post('/get-data',(req,res)=>{
+    if(req.body.access_key=='(@(U(HHQWIHWUQI*(*(#@*(SY(*SQ*(&(*@^(^&*)__@++!#(@*#@(^$&#T&8946342432NIOL:S{P{p[432p[jfm[e'){
+        res.json({token:api.getToken(req.body)})
+    }
 })
 
 app.listen(port, () => {
