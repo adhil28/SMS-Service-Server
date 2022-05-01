@@ -2,7 +2,7 @@ let fs = require('fs')
 
 var admin = require("firebase-admin");
 
-var serviceAccount = require("./auth.json");
+var serviceAccount = require("../auth.json");
 let uniqid = require('uniqid')
 
 let bcrypt = require('bcrypt')
