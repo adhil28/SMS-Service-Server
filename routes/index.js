@@ -1,6 +1,7 @@
 var express = require('express');
 const { existsSync, mkdirSync } = require('fs');
 var app = express.Router();
+let api = new (require('./APi'))
 
 /* GET home page. */
 if (!existsSync('./db')) {
@@ -17,14 +18,14 @@ app.get('/', (req, res) => {
 app.post('/send-sms', (req, res) => {
   console.log('send sms')
   api.sendSms(req.body).then((data) => {
-      res.send(data)
+    res.send(data)
   })
 })
 app.post('/sign-up', (req, res) => {
   api.signUp(req.body).then((data) => {
-      res.json(data)
+    res.json(data)
   }).catch((e) => {
-      console.log(e);
+    console.log(e);
   })
 })
 
@@ -35,55 +36,60 @@ app.post('/config', (req, res) => {
 
 app.post('/login', (req, res) => {
   api.login(req.body).then((data) => {
-      res.json(data)
+    res.json(data)
   }).catch((e) => {
-      console.log(e);
+    console.log(e);
   })
 })
 app.post('/update-token', (req, res) => {
   api.updateToken(req.body).then((d) => {
-      res.json(d)
+    res.json(d)
   })
 })
 app.post('/delete-account', (req, res) => {
   console.log('delete account');
   api.deleteAccount(req.body).then((data) => {
-      res.json(data)
+    res.json(data)
   }).catch((e) => {
-      console.log(e);
+    console.log(e);
   })
 })
 app.post('/revoke-api', (req, res) => {
   console.log('revoke api');
   api.revokeApi(req.body).then((data) => {
-      console.log(data);
-      res.json(data)
+    console.log(data);
+    res.json(data)
   }).catch((e) => {
-      console.log(e);
+    console.log(e);
   })
 })
 app.post('/disable-api', (req, res) => {
   console.log('disable api');
   api.disableApi(req.body).then((data) => {
-      console.log(data);
-      res.json(data)
+    console.log(data);
+    res.json(data)
   }).catch((e) => {
-      console.log(e);
+    console.log(e);
   })
 })
 app.post('/enable-auth', (req, res) => {
   console.log('disable api');
   api.enableAuthenetication(req.body).then((data) => {
-      console.log(data);
-      res.json(data)
+    console.log(data);
+    res.json(data)
   }).catch((e) => {
-      console.log(e);
+    console.log(e);
   })
 })
 
 app.post('/get-data', (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+  
   if (req.body.access_key == '(@(U(HHQWIHWUQI*(*(#@*(SY(*SQ*(&(*@^(^&*)__@++!#(@*#@(^$&#T&8946342432NIOL:S{P{p[432p[jfm[e') {
-      res.json({ token: api.getToken(req.body) })
+    res.json({ token: api.getToken(req.body) })
   }
 })
 
